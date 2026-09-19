@@ -11,6 +11,7 @@ class _LoginState extends State<Login> {
   static const _background = Color(0xFFFFFCF7);
   static const _fieldColor = Color(0xFFF4EEE2);
   static const _green = Color(0xFF398640);
+  static const _buttonColor = Color(0xFFB9674A);
   bool _hidePassword = true;
 
   @override
@@ -32,16 +33,7 @@ class _LoginState extends State<Login> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(27),
-                child: AspectRatio(
-                  aspectRatio: 404 / 206,
-                  child: Image.asset(
-                    'assets/images/login_market_header.png',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
+              const _MarketIllustration(),
               const SizedBox(height: 52),
               const Text(
                 'Bienvenido de vuelta',
@@ -112,7 +104,7 @@ class _LoginState extends State<Login> {
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _green,
+                    backgroundColor: _buttonColor,
                     foregroundColor: Colors.white,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
@@ -149,8 +141,8 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Color(0xFFE8DDCB)),
-                    backgroundColor: Colors.white,
+                    side: const BorderSide(color: Color(0xFFE4C6B9)),
+                    backgroundColor: const Color(0xFFFFF8F4),
                     elevation: 2,
                     shadowColor: const Color(0x24000000),
                     shape: RoundedRectangleBorder(
@@ -198,6 +190,85 @@ class _FieldLabel extends StatelessWidget {
       fontSize: 15.5,
       fontWeight: FontWeight.w700,
     ),
+  );
+}
+
+class _MarketIllustration extends StatelessWidget {
+  const _MarketIllustration();
+
+  @override
+  Widget build(BuildContext context) => ClipRRect(
+    borderRadius: BorderRadius.circular(27),
+    child: AspectRatio(
+      aspectRatio: 404 / 206,
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFF7D9C4), Color(0xFFE9B899)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              top: -42,
+              right: -24,
+              child: _Circle(color: Color(0x55FFF8E7), size: 155),
+            ),
+            Positioned(
+              bottom: -58,
+              left: -14,
+              child: _Circle(color: Color(0x556B9271), size: 180),
+            ),
+            Positioned(
+              top: 30,
+              left: 43,
+              child: Transform.rotate(
+                angle: -.16,
+                child: const Icon(
+                  Icons.eco_rounded,
+                  size: 92,
+                  color: Color(0xFF4E8060),
+                ),
+              ),
+            ),
+            const Positioned(
+              right: 49,
+              bottom: 27,
+              child: Icon(
+                Icons.local_florist_rounded,
+                size: 86,
+                color: Color(0xFFAE5B4F),
+              ),
+            ),
+            const Positioned(
+              left: 146,
+              bottom: 41,
+              child: Icon(
+                Icons.spa_rounded,
+                size: 44,
+                color: Color(0xFF5D8B64),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+class _Circle extends StatelessWidget {
+  const _Circle({required this.color, required this.size});
+
+  final Color color;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: size,
+    height: size,
+    decoration: BoxDecoration(color: color, shape: BoxShape.circle),
   );
 }
 
