@@ -11,8 +11,7 @@ class MercadoApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Mercado Campesino',
-      home: Login()
-      ,
+      home: Login(),
     );
   }
 }
