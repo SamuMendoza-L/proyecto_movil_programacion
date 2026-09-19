@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MainApp());
-}
+void main() => runApp(const MercadoApp());
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MercadoApp extends StatelessWidget {
+  const MercadoApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(body: Center(child: Text('Hello World!'))),
+    return MaterialApp(
+      title: 'Mercado Campesino',
+      home: const Scaffold(
+        body: Center(child: Text('Mercado Campesino')),
+      ),
     );
   }
 }
