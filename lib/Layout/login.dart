@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_movil_navegacion/Layout/account.dart';
 
-class Login extends StatefulWidget {
+class Login extends StatelessWidget {
   const Login({super.key});
 
-  @override
-  State<Login> createState() => _LoginState();
-}
-
-class _LoginState extends State<Login> {
   static const _background = Color(0xFFFFFCF7);
   static const _fieldColor = Color(0xFFF4EEE2);
   static const _green = Color(0xFF398640);
   static const _buttonColor = Color(0xFFB9674A);
-  bool _hidePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -67,20 +62,11 @@ class _LoginState extends State<Login> {
               _LoginTextField(
                 hintText: '••••••••',
                 prefixIcon: Icons.lock_outline_rounded,
-                obscureText: _hidePassword,
-                suffixIcon: IconButton(
-                  tooltip: _hidePassword
-                      ? 'Mostrar contraseña'
-                      : 'Ocultar contraseña',
-                  onPressed: () =>
-                      setState(() => _hidePassword = !_hidePassword),
-                  icon: Icon(
-                    _hidePassword
-                        ? Icons.visibility_off_outlined
-                        : Icons.visibility_outlined,
-                    color: const Color(0xFF918878),
-                    size: 21,
-                  ),
+                obscureText: true,
+                suffixIcon: const Icon(
+                  Icons.visibility_off_outlined,
+                  color: Color(0xFF918878),
+                  size: 21,
                 ),
               ),
               Align(
@@ -102,7 +88,7 @@ class _LoginState extends State<Login> {
               SizedBox(
                 height: 68,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => _openAccount(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _buttonColor,
                     foregroundColor: Colors.white,
@@ -123,7 +109,7 @@ class _LoginState extends State<Login> {
               SizedBox(
                 height: 68,
                 child: OutlinedButton.icon(
-                  onPressed: () {},
+                  onPressed: () => _openAccount(context),
                   icon: const Text(
                     'G',
                     style: TextStyle(
@@ -172,6 +158,15 @@ class _LoginState extends State<Login> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _openAccount(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const Account(userName: 'Camila Restrepo'),
       ),
     );
   }
@@ -296,7 +291,7 @@ class _LoginTextField extends StatelessWidget {
       hintText: hintText,
       hintStyle: const TextStyle(color: Color(0xFF82796B), fontSize: 17),
       filled: true,
-      fillColor: _LoginState._fieldColor,
+      fillColor: Login._fieldColor,
       contentPadding: const EdgeInsets.symmetric(vertical: 20),
       prefixIcon: Icon(prefixIcon, color: const Color(0xFF918878), size: 21),
       suffixIcon: suffixIcon,
@@ -310,7 +305,7 @@ class _LoginTextField extends StatelessWidget {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(17),
-        borderSide: const BorderSide(color: _LoginState._green, width: 1.5),
+        borderSide: const BorderSide(color: Login._green, width: 1.5),
       ),
     ),
   );

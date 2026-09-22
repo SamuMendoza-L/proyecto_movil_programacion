@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_movil_navegacion/Layout/orders.dart';
 
 class Account extends StatelessWidget {
-  const Account({super.key});
+  const Account({required this.userName, super.key});
+
+  /// Dato recibido desde Login mediante Navigator.push.
+  final String userName;
 
   static const _background = Color(0xFFFFFCF7);
   static const _text = Color(0xFF2B2923);
@@ -20,6 +24,16 @@ class Account extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(30, 54, 30, 30),
                 child: Column(
                   children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                        tooltip: 'Volver',
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(Icons.arrow_back_rounded),
+                        color: _text,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(31),
                       child: Image.asset(
@@ -30,8 +44,8 @@ class Account extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 21),
-                    const Text(
-                      'Camila Restrepo',
+                    Text(
+                      userName,
                       style: TextStyle(
                         color: _text,
                         fontSize: 25,
@@ -98,6 +112,12 @@ class Account extends StatelessWidget {
                     ),
                     const SizedBox(height: 31),
                     _SettingsCard(
+                      onOrdersTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => Orders(userName: userName),
+                        ),
+                      ),
                       items: const [
                         _SettingItem(
                           'Mis pedidos',
@@ -123,7 +143,7 @@ class Account extends StatelessWidget {
                       width: double.infinity,
                       height: 61,
                       child: FilledButton.icon(
-                        onPressed: () {},
+                        onPressed: () => Navigator.pop(context),
                         icon: const Icon(Icons.logout_rounded, size: 20),
                         label: const Text(
                           'Cerrar sesión',
@@ -146,9 +166,15 @@ class Account extends StatelessWidget {
                 ),
               ),
             ),
-            const Padding(
+            Padding(
               padding: EdgeInsets.fromLTRB(30, 0, 30, 24),
-              child: _BottomNavigation(),
+              child: _BottomNavigation(
+                onHomeTap: () => Navigator.pop(context),
+                onOrdersTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => Orders(userName: userName)),
+                ),
+              ),
             ),
           ],
         ),
@@ -173,7 +199,7 @@ class _StatsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     height: 76,
-    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 11),
+    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 7),
     decoration: BoxDecoration(
       color: background,
       borderRadius: BorderRadius.circular(19),
@@ -220,9 +246,10 @@ class _SettingItem {
 }
 
 class _SettingsCard extends StatelessWidget {
-  const _SettingsCard({required this.items});
+  const _SettingsCard({required this.items, required this.onOrdersTap});
 
   final List<_SettingItem> items;
+  final VoidCallback onOrdersTap;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -241,7 +268,10 @@ class _SettingsCard extends StatelessWidget {
     child: Column(
       children: [
         for (var index = 0; index < items.length; index++) ...[
-          _SettingsRow(item: items[index]),
+          _SettingsRow(
+            item: items[index],
+            onTap: items[index].label == 'Mis pedidos' ? onOrdersTap : () {},
+          ),
           if (index != items.length - 1)
             const Divider(height: 1, color: Color(0xFFE9E0D2)),
         ],
@@ -251,13 +281,14 @@ class _SettingsCard extends StatelessWidget {
 }
 
 class _SettingsRow extends StatelessWidget {
-  const _SettingsRow({required this.item});
+  const _SettingsRow({required this.item, required this.onTap});
 
   final _SettingItem item;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) => InkWell(
-    onTap: () {},
+    onTap: onTap,
     borderRadius: BorderRadius.circular(23),
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
@@ -295,7 +326,10 @@ class _SettingsRow extends StatelessWidget {
 }
 
 class _BottomNavigation extends StatelessWidget {
-  const _BottomNavigation();
+  const _BottomNavigation({required this.onHomeTap, required this.onOrdersTap});
+
+  final VoidCallback onHomeTap;
+  final VoidCallback onOrdersTap;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -313,51 +347,56 @@ class _BottomNavigation extends StatelessWidget {
         ),
       ],
     ),
-    child: const Row(
+    child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _NavItem('Inicio', Icons.home_outlined),
-        _NavItem('Pedidos', Icons.receipt_long_outlined),
-        _NavItem('Alertas', Icons.notifications_none_rounded),
-        _NavItem('Cuenta', Icons.person_outline_rounded, selected: true),
+        _NavItem('Inicio', Icons.home_outlined, onTap: onHomeTap),
+        _NavItem('Pedidos', Icons.receipt_long_outlined, onTap: onOrdersTap),
+        const _NavItem('Alertas', Icons.notifications_none_rounded),
+        const _NavItem('Cuenta', Icons.person_outline_rounded, selected: true),
       ],
     ),
   );
 }
 
 class _NavItem extends StatelessWidget {
-  const _NavItem(this.label, this.icon, {this.selected = false});
+  const _NavItem(this.label, this.icon, {this.selected = false, this.onTap});
 
   final String label;
   final IconData icon;
   final bool selected;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     const accent = Color(0xFFE77B43);
     final color = selected ? accent : const Color(0xFF756F63);
 
-    return Container(
-      width: 70,
-      height: 61,
-      decoration: BoxDecoration(
-        color: selected ? const Color(0xFFFBE3D3) : Colors.transparent,
-        borderRadius: BorderRadius.circular(17),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: TextStyle(
-              color: color,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(17),
+      child: Container(
+        width: 70,
+        height: 61,
+        decoration: BoxDecoration(
+          color: selected ? const Color(0xFFFBE3D3) : Colors.transparent,
+          borderRadius: BorderRadius.circular(17),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: color, size: 24),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: TextStyle(
+                color: color,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
